@@ -1,0 +1,72 @@
+.map-view {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.map-info {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-weight: 600;
+  z-index: 1000;
+  font-size: 0.9rem;
+}
+
+.dark .map-info {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+.map-instructions {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  max-width: 300px;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.dark .map-instructions {
+  background: rgba(30, 41, 59, 0.95);
+  color: #f1f5f9;
+}
+
+.map-instructions p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Leaflet draw toolbar styling */
+.leaflet-draw-toolbar {
+  margin-top: 12px;
+}
+
+@media (max-width: 640px) {
+  .map-instructions {
+    font-size: 0.8rem;
+    max-width: 200px;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .map-info {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
