@@ -11,7 +11,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 })
 
-function MapView({ onAOIChange, darkMode }) {
+function MapView({ onAOIChange }) {
   const mapRef = useRef(null)
   const mapInstanceRef = useRef(null)
   const drawnItemsRef = useRef(null)

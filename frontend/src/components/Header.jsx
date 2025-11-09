@@ -9,7 +9,7 @@ function Header({ darkMode, setDarkMode }) {
             🌍 Time Machine for Earth
           </h1>
           <p className="header-subtitle">
-            Visualize Earth's changes through satellite imagery
+            Visualize Earth&apos;s changes through satellite imagery
           </p>
         </div>
         

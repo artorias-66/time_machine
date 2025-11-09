@@ -76,7 +76,7 @@ function App() {
       
       <div className="main-content">
         <div className="map-container">
-          <MapView onAOIChange={handleAOIChange} darkMode={darkMode} />
+          <MapView onAOIChange={handleAOIChange} />
         </div>
         
         <div className="sidebar">
