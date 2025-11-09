@@ -1,0 +1,17 @@
+{
+  "name": "time-machine-earth",
+  "version": "1.0.0",
+  "description": "A web app to visualize Earth's changes over time using satellite imagery",
+  "scripts": {
+    "dev": "npm run dev:frontend & npm run dev:backend",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && python -m uvicorn main:app --reload --port 8000",
+    "build": "cd frontend && npm run build",
+    "install:all": "cd frontend && npm install && cd ../backend && pip install -r requirements.txt"
+  },
+  "keywords": ["satellite", "timelapse", "geospatial", "earth-observation"],
+  "author": "",
+  "license": "MIT"
+}
+
+

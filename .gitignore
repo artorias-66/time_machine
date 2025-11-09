@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+dist/
+build/
+frontend/dist/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+.venv
+*.egg-info/
+.pytest_cache/
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Output and cache
+output/*
+!output/.gitkeep
+cache/*
+!cache/.gitkeep
+
+# Logs
+*.log
+logs/
+
+
