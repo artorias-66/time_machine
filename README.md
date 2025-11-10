@@ -24,9 +24,6 @@ A full-stack web application that generates stunning timelapse visualizations fr
 ![Satellite Imagery](screenshots/satellite-frame.png)
 *Actual Landsat satellite imagery downloaded from Arlula API showing real Earth observations*
 
-### Dark Mode
-![Dark Mode](screenshots/dark-mode.png)
-*Full dark theme support for comfortable viewing*
 
 ## ✨ Features
 
