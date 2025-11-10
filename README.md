@@ -28,8 +28,6 @@ A full-stack web application that generates stunning timelapse visualizations fr
 ![Dark Mode](screenshots/dark-mode.png)
 *Full dark theme support for comfortable viewing*
 
-> **Note:** To add your screenshots, create a `screenshots/` folder in the project root and add your images with the filenames shown above.
-
 ## ✨ Features
 
 - 🗺️ **Interactive Map Interface** - Draw custom areas of interest using Leaflet with drawing tools
