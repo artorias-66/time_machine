@@ -64,7 +64,7 @@ class TimelapseRequest(BaseModel):
     visualization: str = "true-color"
 
 
-@app.get("/")
+@app.get("/api")
 async def root():
     return {
         "message": "Time Machine for Earth API",
