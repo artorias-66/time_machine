@@ -38,7 +38,12 @@ function App() {
     setTimelapseResult(null)
 
     try {
-      const response = await fetch('/api/generate-timelapse', {
+      // Use environment variable for API URL in production, proxy in development
+      const apiUrl = import.meta.env.VITE_API_URL 
+        ? `${import.meta.env.VITE_API_URL}/api/generate-timelapse`
+        : '/api/generate-timelapse'
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
