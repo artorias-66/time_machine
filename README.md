@@ -144,10 +144,11 @@ Note: You'll need to deploy the backend separately and update the API URL.
 
 This application is designed to work with multiple free satellite data APIs:
 
-### Currently Supported (Demo Mode)
-- **Synthetic Data Generation** - For demonstration without API keys
+### Currently Supported
+- **Arlula Archive API** ✅ - Integrated! Searches real Landsat imagery
+- **Synthetic Data Generation** - Fallback for demonstration
 
-### Ready to Integrate
+### Ready to Integrate (Future Enhancement)
 1. **[Arlula Archive API](https://arlula.com/)**
    - Landsat and Sentinel imagery
    - Free access to open government data
@@ -166,14 +167,27 @@ This application is designed to work with multiple free satellite data APIs:
 
 ### Adding Your API Keys
 
-Edit `.env` file:
+Create `backend/.env` file:
 ```env
-ARLULA_API_KEY=your_key_here
+ARLULA_KEY=your_key_here
+ARLULA_SECRET=your_secret_here
 USGS_USERNAME=your_username
-USGS_PASSWORD=your_password
+USGS_TOKEN=your_token
 ```
 
-See `backend/services/satellite_service.py` for integration points.
+**The app automatically detects API keys and uses real satellite data when available!**
+
+### How It Works
+
+- **With API Keys**: Searches Arlula's archive for real Landsat scenes matching your criteria
+  - Uses actual scene dates and cloud cover percentages
+  - Logs which satellite scenes are being used
+  - Falls back to demo mode if API fails
+  
+- **Without API Keys**: Uses synthetic imagery generator
+  - Perfect for testing and demonstrations
+  - No API limits or rate restrictions
+  - Fully functional for all features
 
 ## 🔧 Technology Stack
 

@@ -33,6 +33,9 @@ COPY backend/ ./
 # Copy built frontend from previous stage
 COPY --from=frontend-builder /app/frontend/dist ./static
 
+# Serve static frontend files
+RUN pip install aiofiles
+
 # Create necessary directories
 RUN mkdir -p output cache
 

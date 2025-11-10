@@ -37,6 +37,10 @@ os.makedirs("cache", exist_ok=True)
 # Mount static files
 app.mount("/output", StaticFiles(directory="output"), name="output")
 
+# Serve frontend static files (for production)
+if os.path.exists("static"):
+    app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
 # Initialize services
 satellite_service = SatelliteService()
 timelapse_service = TimelapseService()

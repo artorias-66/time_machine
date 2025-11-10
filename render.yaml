@@ -10,6 +10,14 @@ services:
         value: 3.11
       - key: PORT
         value: 8000
+      - key: ARLULA_KEY
+        sync: false
+      - key: ARLULA_SECRET
+        sync: false
+      - key: USGS_USERNAME
+        sync: false
+      - key: USGS_TOKEN
+        sync: false
     healthCheckPath: /api/health
     autoDeploy: true
 

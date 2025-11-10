@@ -13,9 +13,10 @@ class Settings(BaseSettings):
     cors_origins: list = ["*"]
     
     # Satellite API Keys (add your keys here)
-    arlula_api_key: Optional[str] = None
+    arlula_key: Optional[str] = None
+    arlula_secret: Optional[str] = None
     usgs_username: Optional[str] = None
-    usgs_password: Optional[str] = None
+    usgs_token: Optional[str] = None
     sentinel_hub_client_id: Optional[str] = None
     sentinel_hub_client_secret: Optional[str] = None
     

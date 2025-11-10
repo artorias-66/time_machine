@@ -6,6 +6,9 @@ import random
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import io
+import httpx
+import base64
+from config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +27,11 @@ class SatelliteService:
     
     def __init__(self):
         self.cache_dir = "cache"
+        self.use_real_apis = bool(settings.arlula_key and settings.arlula_secret)
+        if self.use_real_apis:
+            logger.info("Real satellite APIs enabled")
+        else:
+            logger.info("Running in demo mode with synthetic imagery")
         
     async def fetch_images(
         self,
@@ -36,9 +44,49 @@ class SatelliteService:
         """
         Fetch satellite images for the specified parameters.
         
-        For demonstration purposes, this generates synthetic images.
-        In production, replace with actual API calls.
+        Tries real APIs first if credentials are available, otherwise uses demo mode.
         """
+        try:
+            # Try real satellite APIs first
+            if self.use_real_apis:
+                try:
+                    logger.info("Attempting to fetch from Arlula API...")
+                    images = await self.fetch_from_arlula(
+                        bounds=bounds,
+                        start_date=start_date,
+                        end_date=end_date,
+                        cloud_cover=cloud_cover,
+                        visualization=visualization
+                    )
+                    if images:
+                        logger.info(f"Successfully fetched {len(images)} images from Arlula")
+                        return images
+                except Exception as e:
+                    logger.warning(f"Arlula API failed, falling back to demo mode: {str(e)}")
+            
+            # Fall back to demo mode with synthetic imagery
+            logger.info("Using demo mode with synthetic imagery")
+            return await self._fetch_synthetic_images(
+                bounds=bounds,
+                start_date=start_date,
+                end_date=end_date,
+                cloud_cover=cloud_cover,
+                visualization=visualization
+            )
+            
+        except Exception as e:
+            logger.error(f"Error fetching images: {str(e)}")
+            raise
+    
+    async def _fetch_synthetic_images(
+        self,
+        bounds: Dict[str, float],
+        start_date: str,
+        end_date: str,
+        cloud_cover: int = 30,
+        visualization: str = "true-color"
+    ) -> List[Dict]:
+        """Generate synthetic satellite imagery for demonstration."""
         try:
             # Parse dates
             start = datetime.fromisoformat(start_date)
@@ -166,16 +214,145 @@ class SatelliteService:
         
         return img
     
-    async def fetch_from_arlula(self, bounds: Dict, start_date: str, end_date: str):
+    async def fetch_from_arlula(
+        self,
+        bounds: Dict[str, float],
+        start_date: str,
+        end_date: str,
+        cloud_cover: int = 30,
+        visualization: str = "true-color"
+    ) -> List[Dict]:
         """
-        Placeholder for Arlula API integration.
+        Fetch satellite imagery from Arlula Archive API.
         
-        To implement:
-        1. Sign up at https://arlula.com/
-        2. Get API key
-        3. Use their Python SDK or REST API
+        Uses Landsat-8 data from Arlula's archive.
         """
-        pass
+        try:
+            # Create authentication header
+            auth_string = f"{settings.arlula_key}:{settings.arlula_secret}"
+            auth_bytes = auth_string.encode('ascii')
+            base64_bytes = base64.b64encode(auth_bytes)
+            base64_auth = base64_bytes.decode('ascii')
+            
+            headers = {
+                "Authorization": f"Basic {base64_auth}",
+                "Content-Type": "application/json"
+            }
+            
+            # Arlula API endpoint
+            search_url = "https://api.arlula.com/api/archive/search"
+            
+            # Build search request with polygon (Arlula format)
+            # Convert bounds to polygon format: [[west,south], [east,south], [east,north], [west,north], [west,south]]
+            polygon = [
+                [
+                    [bounds["west"], bounds["south"]],
+                    [bounds["east"], bounds["south"]],
+                    [bounds["east"], bounds["north"]],
+                    [bounds["west"], bounds["north"]],
+                    [bounds["west"], bounds["south"]]
+                ]
+            ]
+            
+            search_payload = {
+                "start": start_date,
+                "end": end_date,
+                "polygon": polygon,
+                "cloud": cloud_cover,
+                "gsd": 30,  # Ground Sample Distance in meters (Landsat ~30m)
+                "offNadir": 10
+            }
+            
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                # Search for available imagery
+                logger.info(f"Searching Arlula for imagery: {search_payload}")
+                search_response = await client.post(
+                    search_url,
+                    headers=headers,
+                    json=search_payload
+                )
+                
+                if search_response.status_code != 200:
+                    logger.error(f"Arlula search failed: {search_response.text}")
+                    return []
+                
+                search_results = search_response.json()
+                logger.info(f"Arlula returned {len(search_results.get('results', []))} results")
+                
+                if not search_results.get('results'):
+                    logger.warning("No Arlula results found, using demo mode")
+                    return []
+                
+                # Filter for Landsat scenes only (like in working test)
+                landsat_scenes = [r for r in search_results['results'] if r.get('supplier') == 'landsat']
+                logger.info(f"Filtered to {len(landsat_scenes)} Landsat scenes (from {len(search_results['results'])} total)")
+                
+                # Process results into images - DOWNLOAD REAL THUMBNAILS
+                images = []
+                for result in landsat_scenes[:8]:  # Limit to 8 Landsat scenes
+                    try:
+                        scene_date = result.get('date', start_date)
+                        cloud_pct = result.get('cloud', 0)
+                        scene_id = result.get('id', 'unknown')
+                        thumbnail_url = result.get('thumbnail')
+                        
+                        if not thumbnail_url:
+                            logger.warning(f"No thumbnail URL for scene {scene_id}")
+                            continue
+                        
+                        # Download actual satellite thumbnail (with auth and follow redirects)
+                        logger.info(f"Downloading thumbnail for scene {scene_id}...")
+                        thumb_response = await client.get(
+                            thumbnail_url,
+                            timeout=30.0,
+                            headers={
+                                'Authorization': headers['Authorization'],  # Use same auth
+                                'User-Agent': 'Mozilla/5.0'
+                            },
+                            follow_redirects=True  # Follow 303 redirects
+                        )
+                        
+                        if thumb_response.status_code != 200:
+                            logger.warning(f"Failed to download thumbnail: {thumb_response.status_code}")
+                            continue
+                        
+                        if len(thumb_response.content) < 100:
+                            logger.warning(f"Thumbnail too small, likely empty")
+                            continue
+                        
+                        # Load image from bytes (same as working test)
+                        image_data = Image.open(io.BytesIO(thumb_response.content))
+                        logger.info(f"   Loaded image: {image_data.size}, mode: {image_data.mode}")
+                        
+                        # Keep original size (don't resize yet - let timelapse service handle it)
+                        # Just ensure RGB mode
+                        if image_data.mode != 'RGB':
+                            image_data = image_data.convert('RGB')
+                            logger.info(f"   Converted to RGB mode")
+                        
+                        images.append({
+                            'date': scene_date.split('T')[0],
+                            'image': image_data,
+                            'cloud_cover': int(cloud_pct),
+                            'bounds': bounds,
+                            'source': 'arlula',
+                            'scene_id': scene_id
+                        })
+                        
+                        logger.info(f"✓ Downloaded real satellite image: {scene_id} from {scene_date.split('T')[0]}")
+                        
+                    except Exception as e:
+                        logger.warning(f"Failed to process Arlula result: {str(e)}")
+                        continue
+                
+                return images
+                
+        except httpx.TimeoutException:
+            logger.error("Arlula API timeout")
+            return []
+        except Exception as e:
+            logger.error(f"Arlula API error: {str(e)}")
+            return []
     
     async def fetch_from_usgs(self, bounds: Dict, start_date: str, end_date: str):
         """

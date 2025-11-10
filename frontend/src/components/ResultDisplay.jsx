@@ -5,12 +5,15 @@ function ResultDisplay({ result }) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(result.url)
+    // Use full URL for production, relative for dev
+    const fullUrl = window.location.origin + result.url
+    navigator.clipboard.writeText(fullUrl)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
   const handleDownload = () => {
+    // Use result.url directly - works in both dev and production
     const link = document.createElement('a')
     link.href = result.url
     link.download = `timelapse_${result.timestamp}.${result.format}`
@@ -29,13 +32,13 @@ function ResultDisplay({ result }) {
         <div className="result-preview">
           {result.format === 'gif' ? (
             <img 
-              src={result.url} 
+              src={result.url}
               alt="Generated timelapse" 
               className="timelapse-preview"
             />
           ) : (
             <video 
-              src={result.url} 
+              src={result.url}
               controls 
               loop 
               autoPlay 
