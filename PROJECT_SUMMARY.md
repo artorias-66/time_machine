@@ -2,7 +2,15 @@
 
 ## Executive Summary
 
-**Time Machine for Earth** is a full-stack web application that generates timelapse visualizations from satellite imagery, allowing users to observe how any location on Earth has changed over time. Built with React and FastAPI, the application provides an intuitive interface for selecting areas of interest and creating animated GIFs or videos showing temporal changes.
+**Time Machine for Earth** is a full-stack web application that generates timelapse visualizations from satellite imagery, allowing users to observe how any location on Earth has changed over time. Built with React and FastAPI, the application provides an intuitive interface for selecting areas of interest and creating animated GIFs showing temporal changes.
+
+## 🌐 Live Deployment
+
+**Production URL:** [https://time-machine-kn7h.onrender.com](https://time-machine-kn7h.onrender.com)
+
+**Status:** ✅ Deployed and Operational  
+**Platform:** Render (Free Tier)  
+**Features:** Real Arlula satellite API integration with Landsat imagery
 
 ## Key Features Implemented
 

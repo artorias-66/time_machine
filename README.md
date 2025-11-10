@@ -2,7 +2,13 @@
 
 A full-stack web application that generates stunning timelapse visualizations from satellite imagery, showing how any location on Earth has changed over time.
 
-![Time Machine for Earth](https://img.shields.io/badge/status-production-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue)
+![Time Machine for Earth](https://img.shields.io/badge/status-production-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue) ![Deployed](https://img.shields.io/badge/deployed-Render-blueviolet)
+
+## 🚀 Live Demo
+
+**Try it now:** [https://time-machine-kn7h.onrender.com](https://time-machine-kn7h.onrender.com)
+
+*Note: First load may take 30-60 seconds (free tier cold start)*
 
 ## ✨ Features
 
