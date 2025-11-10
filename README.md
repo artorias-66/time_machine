@@ -10,6 +10,26 @@ A full-stack web application that generates stunning timelapse visualizations fr
 
 *Note: First load may take 30-60 seconds (free tier cold start)*
 
+## 📸 Screenshots
+
+### Main Interface
+![Main Interface](screenshots/main-interface.png)
+*Interactive map with Leaflet drawing tools and control panel*
+
+### Timelapse Generation
+![Timelapse Result](screenshots/timelapse-result.png)
+*Generated timelapse with real Landsat satellite imagery, timestamps, and download options*
+
+### Real Satellite Imagery
+![Satellite Imagery](screenshots/satellite-frame.png)
+*Actual Landsat satellite imagery downloaded from Arlula API showing real Earth observations*
+
+### Dark Mode
+![Dark Mode](screenshots/dark-mode.png)
+*Full dark theme support for comfortable viewing*
+
+> **Note:** To add your screenshots, create a `screenshots/` folder in the project root and add your images with the filenames shown above.
+
 ## ✨ Features
 
 - 🗺️ **Interactive Map Interface** - Draw custom areas of interest using Leaflet with drawing tools
