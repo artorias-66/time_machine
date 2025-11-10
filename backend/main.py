@@ -34,14 +34,7 @@ app.add_middleware(
 os.makedirs("output", exist_ok=True)
 os.makedirs("cache", exist_ok=True)
 
-# Mount static files
-app.mount("/output", StaticFiles(directory="output"), name="output")
-
-# Serve frontend static files (for production)
-if os.path.exists("static"):
-    app.mount("/", StaticFiles(directory="static", html=True), name="static")
-
-# Initialize services
+# Initialize services (BEFORE mounting static files)
 satellite_service = SatelliteService()
 timelapse_service = TimelapseService()
 
@@ -158,6 +151,14 @@ async def clear_cache():
         return {"message": "Cache cleared successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# Mount static files AFTER all API routes are defined
+app.mount("/output", StaticFiles(directory="output"), name="output")
+
+# Serve frontend static files (for production) - MUST be last!
+if os.path.exists("static"):
+    app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 if __name__ == "__main__":
