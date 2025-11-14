@@ -125,6 +125,8 @@ async def generate_timelapse(request: TimelapseRequest):
             "date_range": f"{request.start_date} to {request.end_date}",
             "format": request.output_format,
             "visualization": request.visualization,
+            "dummy_data_used": bool(getattr(satellite_service, 'last_fetch_dummy_used', False)),
+            "data_source": "synthetic" if getattr(satellite_service, 'last_fetch_dummy_used', False) else "arlula",
             "timestamp": datetime.utcnow().isoformat()
         }
         

@@ -28,6 +28,8 @@ class SatelliteService:
     def __init__(self):
         self.cache_dir = "cache"
         self.use_real_apis = bool(settings.arlula_key and settings.arlula_secret)
+        # Tracks whether the last fetch used synthetic (dummy) data
+        self.last_fetch_dummy_used = False
         if self.use_real_apis:
             logger.info("Real satellite APIs enabled")
         else:
@@ -60,12 +62,15 @@ class SatelliteService:
                     )
                     if images:
                         logger.info(f"Successfully fetched {len(images)} images from Arlula")
+                        # Mark as real data used
+                        self.last_fetch_dummy_used = False
                         return images
                 except Exception as e:
                     logger.warning(f"Arlula API failed, falling back to demo mode: {str(e)}")
             
             # Fall back to demo mode with synthetic imagery
             logger.info("Using demo mode with synthetic imagery")
+            self.last_fetch_dummy_used = True
             return await self._fetch_synthetic_images(
                 bounds=bounds,
                 start_date=start_date,
@@ -118,7 +123,8 @@ class SatelliteService:
                     'date': image_date.isoformat(),
                     'image': image_data,
                     'cloud_cover': random.randint(0, cloud_cover),
-                    'bounds': bounds
+                    'bounds': bounds,
+                    'source': 'synthetic'
                 })
                 
                 # Simulate API delay
@@ -289,7 +295,9 @@ class SatelliteService:
                 
                 # Process results into images - DOWNLOAD REAL THUMBNAILS
                 images = []
-                for result in landsat_scenes[:8]:  # Limit to 8 Landsat scenes
+                # Respect max images per request from settings
+                max_images = max(1, int(getattr(settings, 'max_images_per_request', 20)))
+                for result in landsat_scenes[:max_images]:
                     try:
                         scene_date = result.get('date', start_date)
                         cloud_pct = result.get('cloud', 0)

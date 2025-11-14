@@ -3,6 +3,7 @@ import MapView from './components/MapView'
 import ControlPanel from './components/ControlPanel'
 import ResultDisplay from './components/ResultDisplay'
 import Header from './components/Header'
+import DummyDataModal from './components/DummyDataModal'
 import './App.css'
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState(null)
+  const [showDummyModal, setShowDummyModal] = useState(false)
 
   useEffect(() => {
     if (darkMode) {
@@ -36,6 +38,7 @@ function App() {
     setProgress(0)
     setError(null)
     setTimelapseResult(null)
+    setShowDummyModal(false)
 
     try {
       // Use environment variable for API URL in production, proxy in development
@@ -66,6 +69,10 @@ function App() {
 
       const data = await response.json()
       setTimelapseResult(data)
+      // Show an explicit popup if backend used dummy/synthetic imagery
+      if (data?.dummy_data_used) {
+        setShowDummyModal(true)
+      }
       setProgress(100)
     } catch (err) {
       setError(err.message)
@@ -98,6 +105,12 @@ function App() {
           )}
         </div>
       </div>
+
+      <DummyDataModal 
+        open={showDummyModal} 
+        onClose={() => setShowDummyModal(false)}
+        dataSource={timelapseResult?.data_source}
+      />
     </div>
   )
 }

@@ -1,0 +1,10 @@
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal{background:#101318;color:#e5e7eb;border:1px solid rgba(255,255,255,0.1);border-radius:12px;max-width:520px;width:92%;box-shadow:0 10px 30px rgba(0,0,0,0.4)}
+.modal-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.modal-header h3{margin:0;font-size:18px}
+.modal-body{padding:16px 20px;line-height:1.5}
+.modal-body ul{margin:8px 0 0 18px}
+.modal-body .tip{margin-top:12px;font-size:13px;opacity:0.85}
+.modal-footer{padding:14px 20px;display:flex;justify-content:flex-end;border-top:1px solid rgba(255,255,255,0.08)}
+.btn{background:#2563eb;border:none;color:white;padding:10px 14px;border-radius:8px;cursor:pointer}
+.btn:hover{background:#1d4ed8}

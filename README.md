@@ -277,10 +277,31 @@ Generate a timelapse from satellite imagery.
   "frame_count": 6,
   "date_range": "2023-01-01 to 2023-06-01",
   "format": "gif",
-  "visualization": "true-color",
-  "timestamp": "2023-11-09T12:00:00"
+   "visualization": "true-color",
+   "dummy_data_used": false,
+   "data_source": "arlula",
+   "timestamp": "2023-11-09T12:00:00"
 }
 ```
+
+### Demo Mode Notice (Frontend)
+
+When the backend generates imagery using demo (synthetic) data, the frontend now shows a clear popup informing the user that images may not match the selected area. This occurs when:
+
+- No valid satellite API credentials are configured, or
+- The provider returns no matching results and the app falls back to demo mode.
+
+You can dismiss the popup and proceed; all other features (timestamps, visualization type, downloads) continue to work.
+
+### Configurable Frame Count
+
+The maximum number of images used to build a timelapse can be configured in `backend/config.py`:
+
+```python
+max_images_per_request: int = 20
+```
+
+This value is respected for real API imagery (e.g., Arlula). Synthetic mode generates a reasonable number of frames based on the date span (capped at 12 by default).
 
 ## 🎯 Usage Example
 

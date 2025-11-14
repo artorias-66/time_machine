@@ -61,6 +61,12 @@ function ResultDisplay({ result }) {
             <span className="info-label">🎨 Type:</span>
             <span className="info-value">{result.visualization}</span>
           </div>
+          {result.data_source && (
+            <div className="info-item">
+              <span className="info-label">🛰️ Source:</span>
+              <span className="info-value">{result.data_source}</span>
+            </div>
+          )}
         </div>
         
         <div className="result-actions">
