@@ -301,7 +301,11 @@ The maximum number of images used to build a timelapse can be configured in `bac
 max_images_per_request: int = 20
 ```
 
-This value is respected for real API imagery (e.g., Arlula). Synthetic mode generates a reasonable number of frames based on the date span (capped at 12 by default).
+This value is respected for real API imagery (e.g., Arlula). Set `max_images_per_request` to `0` (or any value <= 0) to remove the cap and use all available results returned by the provider.
+
+Notes:
+- More frames increase processing time and output size (GIFs especially). Consider using `mp4` for large frame counts.
+- Synthetic mode still generates a reasonable number of frames based on the date span (currently capped at 12 by default).
 
 ## 🎯 Usage Example
 

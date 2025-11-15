@@ -21,7 +21,8 @@ class Settings(BaseSettings):
     sentinel_hub_client_secret: Optional[str] = None
     
     # Processing
-    max_images_per_request: int = 20
+    # Set to 0 (or <= 0) for unlimited frames from provider
+    max_images_per_request: int = 0
     max_aoi_size_km2: int = 10000
     
     # Storage

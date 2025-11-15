@@ -296,8 +296,15 @@ class SatelliteService:
                 # Process results into images - DOWNLOAD REAL THUMBNAILS
                 images = []
                 # Respect max images per request from settings
-                max_images = max(1, int(getattr(settings, 'max_images_per_request', 20)))
-                for result in landsat_scenes[:max_images]:
+                cfg_value = getattr(settings, 'max_images_per_request', 20)
+                try:
+                    max_images = int(cfg_value) if cfg_value is not None else 20
+                except Exception:
+                    max_images = 20
+
+                # If max_images <= 0, treat as unlimited (no slicing)
+                iterable = landsat_scenes if max_images <= 0 else landsat_scenes[:max_images]
+                for result in iterable:
                     try:
                         scene_date = result.get('date', start_date)
                         cloud_pct = result.get('cloud', 0)
